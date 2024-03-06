@@ -1,0 +1,15 @@
+{
+    "name": "Ollama Assistant",
+    "version": "0.0.0.1",
+    "manifest_version": 3,
+    "description": "An extension to call ollama.",
+    "icons": {
+        "16": "icons/llama.png",
+        "32": "icons/llama.png",
+        "48": "icons/llama.png",
+        "128": "icons/llama.png"
+    },
+    "action": {
+        "default_popup": "popup/index.html"
+    }
+}
