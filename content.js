@@ -30,7 +30,7 @@ function getMarkerPosition() {
   return {
     // Substract width of marker button -> 40px / 2 = 20
     left: rangeBounds.left + rangeBounds.width / 2 - 20,
-    top: rangeBounds.top - 30,
+    top: rangeBounds.top - 60,
     display: "flex",
   };
 }
