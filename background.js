@@ -1,14 +1,25 @@
 let modelName
+let highLightText
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.modelName) {
-      console.log("Message received in background:", request);
+      console.log("Message received from pop:", request);
       // Perform any necessary actions here
       modelName = request.modelName
       // Send a response back to the popup
       setTimeout(()=> {
         sendResponse({ received: true })
       }, 1)
+    }
+
+    if (request.selected) {
+        console.log("selected received from content:", request);
+        // Perform any necessary actions here
+        highLightText = request.selected
+        // Send a response back to the popup
+        setTimeout(()=> {
+          sendResponse({ received: true })
+        }, 1)
     }
     return true
 })
@@ -35,6 +46,8 @@ function getContextItems() {
     return context
 }
 
-function LLMRespShow(selectedText, prompt) {
-
-}
+chrome.contextMenus.onClicked.addListener((info) => {
+    console.log('model name:', modelName)
+    console.log("id: ", info.menuItemId)
+    
+})

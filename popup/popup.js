@@ -1,6 +1,6 @@
 function sendModelNameToBackground() {
     const name = document.getElementById('model').value
-    chrome.runtime.sendMessage({ modelName: name }, function(response) {
+    chrome.runtime.sendMessage({ modelName: name }, (response) => {
       console.log("Response from background:", response);
     });
 }
