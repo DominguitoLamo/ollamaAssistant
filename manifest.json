@@ -9,7 +9,13 @@
         "48": "icons/llama.png",
         "128": "icons/llama.png"
     },
+    "background": {
+        "service_worker": "background.js"
+      },
     "action": {
         "default_popup": "popup/index.html"
-    }
+    },
+    "permissions": [
+        "contextMenus"
+    ]
 }
