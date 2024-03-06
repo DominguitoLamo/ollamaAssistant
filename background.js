@@ -1,17 +1,6 @@
-let modelName
 let highLightText
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.modelName) {
-      console.log("Message received from pop:", request);
-      // Perform any necessary actions here
-      modelName = request.modelName
-      // Send a response back to the popup
-      setTimeout(()=> {
-        sendResponse({ received: true })
-      }, 1)
-    }
-
     if (request.selected) {
         console.log("selected received from content:", request);
         // Perform any necessary actions here
@@ -46,8 +35,17 @@ function getContextItems() {
     return context
 }
 
-chrome.contextMenus.onClicked.addListener((info) => {
+chrome.contextMenus.onClicked.addListener(async(info) => {
+    const storage = await chrome.storage.sync.get(["modelName"])
+    const modelName = storage.modelName ? storage.modelName : 'qwen:7b'
     console.log('model name:', modelName)
     console.log("id: ", info.menuItemId)
-    
+    console.log("highlightText: ", highLightText)
+    if (info.menuItemId !== 'custom prompt') {
+        const result = requestLLM(modelName, highLightText, info.menuItemId)
+    }
 })
+
+function requestLLM(modelName, highLightText, promptText) {
+    return `${modelName}-${highLightText}-${promptText}`
+}

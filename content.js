@@ -8,5 +8,6 @@ document.addEventListener('mousedown', e => {
         selected: window.getSelection().toString()
     },(response) => {
         console.log("Response from background:", response);
+        return true
     })
 })
