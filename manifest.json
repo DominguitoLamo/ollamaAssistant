@@ -16,6 +16,8 @@
         "default_popup": "popup/index.html"
     },
     "permissions": [
-        "contextMenus"
+        "contextMenus",
+        "tabs",
+        "activeTab"
     ]
 }
