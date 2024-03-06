@@ -2,9 +2,9 @@
 const ollamaTab = document.createElement("ollama-tab");
 document.body.appendChild(ollamaTab);
 
-const setMarkerPosition = (markerPosition) =>
+const setTabPosition = (markerPosition) =>
     ollamaTab.setAttribute(
-        "markerPosition",
+        "tabPosition",
         JSON.stringify(markerPosition)
     )
 
@@ -12,25 +12,25 @@ const getSelectedText = () => window.getSelection().toString();
 
 document.addEventListener("click", () => {
   if (getSelectedText().length > 0) {
-    setMarkerPosition(getMarkerPosition());
+    setTabPosition(getTabPosition());
   }
 });
 
 document.addEventListener("selectionchange", () => {
   if (getSelectedText().length === 0) {
-    setMarkerPosition({ display: "none" });
+    setTabPosition({ display: "none" });
   }
 });
 
-function getMarkerPosition() {
+function getTabPosition() {
   const rangeBounds = window
     .getSelection()
     .getRangeAt(0)
     .getBoundingClientRect();
   return {
-    // Substract width of marker button -> 40px / 2 = 20
+    // Substract width of tab button -> 40px / 2 = 20
     left: rangeBounds.left + rangeBounds.width / 2 - 20,
-    top: rangeBounds.top - 60,
+    top: rangeBounds.top - 40,
     display: "flex",
   };
 }

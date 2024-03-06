@@ -66,17 +66,17 @@ class OllamaTab extends HTMLElement {
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "markerPosition") {
-          this.styleElement.textContent = styled(this.markerPosition);
+        if (name === "tabPosition") {
+          this.styleElement.textContent = styled(this.tabPosition);
         }
       }
 
     static get observedAttributes() {
-        return ["markerPosition"];
+        return ["tabPosition"];
     }
 
-    get markerPosition() {
-        return JSON.parse(this.getAttribute("markerPosition") || "{}");
+    get tabPosition() {
+        return JSON.parse(this.getAttribute("tabPosition") || "{}");
       }
     
     get styleElement() {
