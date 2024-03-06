@@ -1,26 +1,26 @@
 // render ollama tabbar
-function renderOllamaTab() {
-    const tab = document.createElement("ollama-bar")
-    document.body.appendChild(tab)
+const ollamaTab = document.createElement("ollama-tab");
+document.body.appendChild(ollamaTab);
 
-    // no highlight case
-    document.addEventListener("selectionchange", () => {
-        if (getSelectedText().length === 0) {
-          tab.setAttribute()
-        }
-    })
-}
+const setMarkerPosition = (markerPosition) =>
+    ollamaTab.setAttribute(
+        "markerPosition",
+        JSON.stringify(markerPosition)
+    )
 
-function getSelectedText() {
-    window.getSelection().toString()
-}
+const getSelectedText = () => window.getSelection().toString();
 
 document.addEventListener("click", () => {
   if (getSelectedText().length > 0) {
-    showOllamaTab(getTabPosition());
+    setMarkerPosition(getMarkerPosition());
   }
 });
 
+document.addEventListener("selectionchange", () => {
+  if (getSelectedText().length === 0) {
+    setMarkerPosition({ display: "none" });
+  }
+});
 
 function getMarkerPosition() {
   const rangeBounds = window
@@ -35,7 +35,7 @@ function getMarkerPosition() {
   };
 }
 
-renderOllamaTab()
+// #################################################
 
 document.addEventListener('mousedown', e => {
     if (e.button !== 2) {
