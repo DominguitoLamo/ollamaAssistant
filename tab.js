@@ -52,6 +52,7 @@ f   ill: ${highlightColor};
 `
 
 class OllamaTab extends HTMLElement {
+
     constructor() {
         super()
         this.render()
@@ -75,26 +76,27 @@ class OllamaTab extends HTMLElement {
         }
 
         for (const [domId, tabPrompt] of Object.entries(prompts)) {
-            document.getElementById(domId).addEventListener('click', () => {
+            this.shadowRoot.getElementById(domId).addEventListener('click', async() => {
                 const selectedText = window.getSelection()
                 const llmMsg = `${selectedText}\n${tabPrompt}`
-
-                // send to background
                 chrome.runtime.sendMessage({
                     type: 'ollamaCall',
                     data: {
                         text: llmMsg
                     }
                 }, (resp) => {
-                    if (resp.code === 0) {
-                        const text = resp.data
-                        
-                    } else {
-                        alert(`Ollama call failed. ${resp.msg}`)
-                    }
+                    console.log('background msg:',resp)
+                    return true
                 })
             })
         }
+    }
+
+    showOutputBox(text) {
+        const output = document.getElementById('')
+        output.textContent = text
+
+        output.style['display'] = 'block'
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

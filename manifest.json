@@ -26,6 +26,7 @@
           "matches": ["<all_urls>"],
           "js": [
             "custom-elements.min.js",
+            "output.js",
             "tab.js",
             "content.js"
           ]

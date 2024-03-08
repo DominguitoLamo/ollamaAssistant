@@ -1,6 +1,6 @@
 let highLightText
 
-chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.selected) {
         console.log("selected received from content:", request);
         // Perform any necessary actions here
@@ -9,13 +9,22 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         setTimeout(()=> {
           sendResponse({ received: true })
         }, 1)
+        return true
     }
 
     if (request.type === 'ollamaCall') {
-        const result = await requestLLM()
-        sendResponse(result)
+        setTimeout(()=> {
+            // const modelName = await getModelName()
+            // const result = await requestLLM(modelName, request.data.text)
+            // sendResponse(result)
+            new Promise((resolve) => {
+                getModelName().then(value => resolve(value))
+            }).then(modelName => {
+                requestLLM(modelName, request.data.text).then(result => sendResponse(result))
+            })
+        }, 1)
+        return true
     }
-    return true
 })
 
 chrome.runtime.onInstalled.addListener(()=> {

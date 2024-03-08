@@ -1,6 +1,6 @@
 // render ollama tabbar
-const ollamaTab = document.createElement("ollama-tab");
-document.body.appendChild(ollamaTab);
+const ollamaTab = document.createElement("ollama-tab")
+document.body.appendChild(ollamaTab)
 
 const setTabPosition = (markerPosition) =>
     ollamaTab.setAttribute(
@@ -12,7 +12,7 @@ const getSelectedText = () => window.getSelection().toString();
 
 document.addEventListener("click", () => {
   if (getSelectedText().length > 0) {
-    setTabPosition(getTabPosition());
+    setTabPosition(getTabPosition())
   }
 });
 
@@ -50,4 +50,3 @@ document.addEventListener('mousedown', e => {
         return true
     })
 })
-
