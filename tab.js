@@ -109,6 +109,9 @@ class OllamaTab extends HTMLElement {
         output.style['top'] = `${this.tabPosition['top'] + 80}px`
         output.style['left'] = `${this.tabPosition['left']}px`
         output.style['display'] = 'block'
+
+        // make tab disappear
+        this.setAttribute('tabPosition', JSON.stringify({display: 'none'}))
     }
 
     attributeChangedCallback(name, oldValue, newValue) {

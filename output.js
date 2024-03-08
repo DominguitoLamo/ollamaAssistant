@@ -20,9 +20,17 @@ function initOutputBox() {
         output.style[attribute] = value
     }
 
-    console.log('output dom created')
-
     document.body.appendChild(output)
+
+    // create event to close outputBox
+    document.addEventListener('click', (e) => {
+        const target = e.target
+        const id = target.id
+
+        if (id !== 'ollama-output') {
+            output.style['display'] = 'none'
+        }
+    })
 }
 
 initOutputBox()
