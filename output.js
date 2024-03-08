@@ -6,7 +6,7 @@ function initOutputBox() {
         'backgroundColor': 'black',
         'fontSize': '18px',
         'color': 'white',
-        'width': '84px',
+        'width': '350px',
         'display': 'none',
         'position': 'fixed',
         'top': '0px',
@@ -19,6 +19,10 @@ function initOutputBox() {
     for (const [attribute, value] of Object.entries(outputStyle)) {
         output.style[attribute] = value
     }
+
+    console.log('output dom created')
+
+    document.body.appendChild(output)
 }
 
 initOutputBox()

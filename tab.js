@@ -86,6 +86,12 @@ class OllamaTab extends HTMLElement {
                     }
                 }, (resp) => {
                     console.log('background msg:',resp)
+
+                    if (resp.code === 0) {
+                        // show output
+                        this.showOutputBox(resp.data)
+                    }
+
                     return true
                 })
             })
@@ -93,9 +99,15 @@ class OllamaTab extends HTMLElement {
     }
 
     showOutputBox(text) {
-        const output = document.getElementById('')
+        const output = document.getElementById('ollama-output')
+        if (!output) {
+            console.error('not outputBox exist')
+            return
+        }
         output.textContent = text
-
+        console.log('tab top:',this.tabPosition['top'])
+        output.style['top'] = `${this.tabPosition['top'] + 80}px`
+        output.style['left'] = `${this.tabPosition['left']}px`
         output.style['display'] = 'block'
     }
 
