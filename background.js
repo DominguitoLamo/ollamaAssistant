@@ -1,6 +1,6 @@
 let highLightText
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.selected) {
         console.log("selected received from content:", request);
         // Perform any necessary actions here
@@ -9,6 +9,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         setTimeout(()=> {
           sendResponse({ received: true })
         }, 1)
+    }
+
+    if (request.type === 'ollamaCall') {
+        const result = await requestLLM()
+        sendResponse(result)
     }
     return true
 })
@@ -36,16 +41,24 @@ function getContextItems() {
 }
 
 chrome.contextMenus.onClicked.addListener(async(info) => {
-    const storage = await chrome.storage.sync.get(["modelName"])
-    const modelName = storage.modelName ? storage.modelName : 'qwen:7b'
+    const modelName = await getModelName()
     console.log('model name:', modelName)
     console.log("id: ", info.menuItemId)
     console.log("highlightText: ", highLightText)
     if (info.menuItemId !== 'custom prompt') {
-        const result = requestLLM(modelName, highLightText, info.menuItemId)
+        const result = requestLLM(modelName, `${highLightText}\n${info.menuItemId}`)
     }
 })
 
-function requestLLM(modelName, highLightText, promptText) {
-    return `${modelName}-${highLightText}-${promptText}`
+async function requestLLM(modelName, promptText) {
+    return Promise.resolve({
+        code: 0,
+        data: `${modelName}-${promptText}`
+    })
+}
+
+async function getModelName() {
+    const storage = await chrome.storage.sync.get(["modelName"])
+    const modelName = storage.modelName ? storage.modelName : 'qwen:7b'
+    return modelName
 }

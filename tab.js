@@ -55,6 +55,7 @@ class OllamaTab extends HTMLElement {
     constructor() {
         super()
         this.render()
+        this.addButtonListeners()
     }
 
     render() {
@@ -63,6 +64,37 @@ class OllamaTab extends HTMLElement {
         style.textContent = styled({})
         this.shadowRoot.appendChild(style)
         this.shadowRoot.innerHTML += template
+    }
+
+    addButtonListeners() {
+        const prompts = {
+            'ollama-translate' : 'translate into chinese',
+            'ollama-summary': 'summary the text',
+            'ollama-decorate': 'decorate the text',
+            'ollama-explain': 'explain the meaning'
+        }
+
+        for (const [domId, tabPrompt] of Object.entries(prompts)) {
+            document.getElementById(domId).addEventListener('click', () => {
+                const selectedText = window.getSelection()
+                const llmMsg = `${selectedText}\n${tabPrompt}`
+
+                // send to background
+                chrome.runtime.sendMessage({
+                    type: 'ollamaCall',
+                    data: {
+                        text: llmMsg
+                    }
+                }, (resp) => {
+                    if (resp.code === 0) {
+                        const text = resp.data
+                        
+                    } else {
+                        alert(`Ollama call failed. ${resp.msg}`)
+                    }
+                })
+            })
+        }
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
