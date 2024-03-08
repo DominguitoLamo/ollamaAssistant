@@ -1,4 +1,7 @@
+import axios from './axios.min.js'
+
 let highLightText
+const OLLAMA_API = `http://127.0.0.1:11434/api/generate`
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.selected) {
@@ -20,7 +23,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             new Promise((resolve) => {
                 getModelName().then(value => resolve(value))
             }).then(modelName => {
-                requestLLM(modelName, request.data.text).then(result => sendResponse(result))
+                requestLLM(modelName, request.data.text).then(result => sendResponse(result), () => sendResponse({ code: 1, msg: 'ollama call failed' }))
             })
         }, 1)
         return true
@@ -60,9 +63,29 @@ chrome.contextMenus.onClicked.addListener(async(info) => {
 })
 
 async function requestLLM(modelName, promptText) {
-    return Promise.resolve({
-        code: 0,
-        data: `${modelName}-${promptText}`
+    // return Promise.resolve({
+    //     code: 0,
+    //     data: `${modelName}-${promptText}`
+    // })
+    
+    return axios.post(OLLAMA_API, {
+        "model": modelName,
+        "prompt":promptText
+    }).then((resp)=> {
+        if (resp.status === 200) {
+            return {
+                code: 0,
+                data: resp.data.response
+            }
+        } else {
+            return {
+                code: 1,
+                msg: 'http request failed'
+            }
+        }
+    }).catch(()=> {
+        console.error('axios post failed')
+        return false
     })
 }
 

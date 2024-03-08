@@ -90,6 +90,8 @@ class OllamaTab extends HTMLElement {
                     if (resp.code === 0) {
                         // show output
                         this.showOutputBox(resp.data)
+                    } else {
+                        console.error('error from background:', resp.msg)
                     }
 
                     return true
