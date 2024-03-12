@@ -16,6 +16,9 @@
     "action": {
         "default_popup": "popup/index.html"
     },
+    "host_permissions": [
+      "http://localhost:11434/*"
+    ],
     "permissions": [
         "contextMenus",
         "tabs",

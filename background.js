@@ -1,11 +1,10 @@
-import axios from './axios.min.js'
-
 let highLightText
-const OLLAMA_API = `http://127.0.0.1:11434/api/generate`
+const OLLAMA_API = `http://127.0.0.1:11434/api/`
+
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.selected) {
-        console.log("selected received from content:", request);
         // Perform any necessary actions here
         highLightText = request.selected
         // Send a response back to the popup
@@ -17,13 +16,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     if (request.type === 'ollamaCall') {
         setTimeout(()=> {
-            // const modelName = await getModelName()
-            // const result = await requestLLM(modelName, request.data.text)
-            // sendResponse(result)
             new Promise((resolve) => {
                 getModelName().then(value => resolve(value))
             }).then(modelName => {
-                requestLLM(modelName, request.data.text).then(result => sendResponse(result), () => sendResponse({ code: 1, msg: 'ollama call failed' }))
+                requestLLM(modelName, request.data.text).then(result => {
+                    sendResponse(result)
+                }, () => sendResponse({ code: 1, msg: 'ollama call failed' }))
             })
         }, 1)
         return true
@@ -67,15 +65,17 @@ async function requestLLM(modelName, promptText) {
     //     code: 0,
     //     data: `${modelName}-${promptText}`
     // })
-    
-    return axios.post(OLLAMA_API, {
+    return postData(`generate`, {
         "model": modelName,
-        "prompt":promptText
-    }).then((resp)=> {
-        if (resp.status === 200) {
+        "prompt":promptText,
+        "stream": false
+    }).then(async (resp)=> {
+        if (resp.ok) {
+            const data = await resp.json()
+            console.log('resp data:', data)
             return {
                 code: 0,
-                data: resp.data.response
+                data: data.response
             }
         } else {
             return {
@@ -83,8 +83,8 @@ async function requestLLM(modelName, promptText) {
                 msg: 'http request failed'
             }
         }
-    }).catch(()=> {
-        console.error('axios post failed')
+    }).catch((e)=> {
+        console.error('axios post failed:', e)
         return false
     })
 }
@@ -94,3 +94,12 @@ async function getModelName() {
     const modelName = storage.modelName ? storage.modelName : 'qwen:7b'
     return modelName
 }
+
+async function postData(api = "", data = {}) {
+    // Default options are marked with *
+    const response = await fetch(OLLAMA_API + api, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    })
+    return response // parses JSON response into native JavaScript objects
+  }
