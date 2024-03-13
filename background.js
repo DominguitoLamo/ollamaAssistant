@@ -61,10 +61,6 @@ chrome.contextMenus.onClicked.addListener(async(info) => {
 })
 
 async function requestLLM(modelName, promptText) {
-    // return Promise.resolve({
-    //     code: 0,
-    //     data: `${modelName}-${promptText}`
-    // })
     return postData(`generate`, {
         "model": modelName,
         "prompt":promptText,

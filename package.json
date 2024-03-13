@@ -1,6 +1,6 @@
 {
   "name": "ollamaassistant",
-  "version": "1.0.0",
+  "version": "0.1",
   "description": "browser plugin to call ollama",
   "main": "index.js",
   "scripts": {
