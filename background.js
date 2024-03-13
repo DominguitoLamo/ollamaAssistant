@@ -28,37 +28,37 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 })
 
-chrome.runtime.onInstalled.addListener(()=> {
-    const contextItems = getContextItems()
-    contextItems.forEach(item => {
-        chrome.contextMenus.create({
-            title: item,
-            contexts: ['selection'],
-            id: item
-        })
-    })
-})
+// chrome.runtime.onInstalled.addListener(()=> {
+//     const contextItems = getContextItems()
+//     contextItems.forEach(item => {
+//         chrome.contextMenus.create({
+//             title: item,
+//             contexts: ['selection'],
+//             id: item
+//         })
+//     })
+// })
 
-function getContextItems() {
-    const context = [
-        'translate into chinese',
-        'summary',
-        'decorate',
-        'explain meaning',
-        'custom prompt'
-    ]
-    return context
-}
+// function getContextItems() {
+//     const context = [
+//         'translate into chinese',
+//         'summary',
+//         'decorate',
+//         'explain meaning',
+//         'custom prompt'
+//     ]
+//     return context
+// }
 
-chrome.contextMenus.onClicked.addListener(async(info) => {
-    const modelName = await getModelName()
-    console.log('model name:', modelName)
-    console.log("id: ", info.menuItemId)
-    console.log("highlightText: ", highLightText)
-    if (info.menuItemId !== 'custom prompt') {
-        const result = requestLLM(modelName, `${highLightText}\n${info.menuItemId}`)
-    }
-})
+// chrome.contextMenus.onClicked.addListener(async(info) => {
+//     const modelName = await getModelName()
+//     console.log('model name:', modelName)
+//     console.log("id: ", info.menuItemId)
+//     console.log("highlightText: ", highLightText)
+//     if (info.menuItemId !== 'custom prompt') {
+//         const result = requestLLM(modelName, `${highLightText}\n${info.menuItemId}`)
+//     }
+// })
 
 async function requestLLM(modelName, promptText) {
     return postData(`generate`, {
