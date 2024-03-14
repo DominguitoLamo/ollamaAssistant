@@ -31,6 +31,7 @@
           "js": [
             "custom-elements.min.js",
             "output.js",
+            "input.js",
             "tab.js",
             "content.js"
           ]

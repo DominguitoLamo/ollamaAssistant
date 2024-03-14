@@ -44,9 +44,22 @@ document.addEventListener('mousedown', e => {
 
     console.log('right click event start')
     chrome.runtime.sendMessage({
-        selected: window.getSelection().toString()
+        selected: window.getSelection().toString(),
+        top: e.clientY + 40,
+        left: e.clientX
     },(response) => {
         console.log("Response from background:", response);
         return true
     })
+})
+
+// resp from background
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.type === "ollama-call") {
+    console.log("Received message from background script: ", message)
+    // Handle the message from ollama
+    if (message.content.data) {
+
+    }
+  }
 })

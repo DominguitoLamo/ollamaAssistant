@@ -1,13 +1,17 @@
-let highLightText
+const highLightInfo = {
+    text: '',
+    top: 0,
+    left: 0
+}
 const OLLAMA_API = `http://127.0.0.1:11434/api/`
-
+const customPrompts = {}
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.selected) {
-        // Perform any necessary actions here
-        highLightText = request.selected
-        // Send a response back to the popup
+        highLightInfo.text = request.selected
+        highLightInfo.top = request.top
+        highLightInfo.left = request.left
         setTimeout(()=> {
           sendResponse({ received: true })
         }, 1)
@@ -28,37 +32,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 })
 
-// chrome.runtime.onInstalled.addListener(()=> {
-//     const contextItems = getContextItems()
-//     contextItems.forEach(item => {
-//         chrome.contextMenus.create({
-//             title: item,
-//             contexts: ['selection'],
-//             id: item
-//         })
-//     })
-// })
+chrome.runtime.onInstalled.addListener(()=> {
+    const contextItems = getContextItems()
+    contextItems.forEach(item => {
+        chrome.contextMenus.create({
+            title: item,
+            contexts: ['selection'],
+            id: item
+        })
+    })
+})
 
-// function getContextItems() {
-//     const context = [
-//         'translate into chinese',
-//         'summary',
-//         'decorate',
-//         'explain meaning',
-//         'custom prompt'
-//     ]
-//     return context
-// }
+function getContextItems() {
+    const context = [
+        'custom prompt'
+    ]
+    return context
+}
 
-// chrome.contextMenus.onClicked.addListener(async(info) => {
-//     const modelName = await getModelName()
-//     console.log('model name:', modelName)
-//     console.log("id: ", info.menuItemId)
-//     console.log("highlightText: ", highLightText)
-//     if (info.menuItemId !== 'custom prompt') {
-//         const result = requestLLM(modelName, `${highLightText}\n${info.menuItemId}`)
-//     }
-// })
+chrome.contextMenus.onClicked.addListener(async(info) => {
+    const modelName = await getModelName()
+    console.log('model name:', modelName)
+    console.log("id: ", info.menuItemId)
+    console.log("highlightText: ", highLightText)
+    if (info.menuItemId !== 'custom prompt') {
+        const result = await requestLLM(modelName, `${highLightText}\n${customPrompts[info.menuItemId]}`)
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, { type: 'ollama-call', content: result })
+        })
+    }
+})
 
 async function requestLLM(modelName, promptText) {
     return postData(`generate`, {
