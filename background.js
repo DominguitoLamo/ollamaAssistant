@@ -92,10 +92,23 @@ async function getModelName() {
 }
 
 async function postData(api = "", data = {}) {
-    // Default options are marked with *
-    const response = await fetch(OLLAMA_API + api, {
+    const address = await getBaseAddress()
+    const response = await fetch(address + api, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     })
     return response // parses JSON response into native JavaScript objects
-  }
+}
+
+async function getBaseAddress() {
+    const storage = await chrome.storage.sync.get(["address"])
+    let address
+
+    if (storage.address) {
+        address = storage.address[storage.address.length - 1]  === '/' ? storage.address + 'api/' : storage.address + '/api/'
+    } else {
+        address = OLLAMA_API
+    }
+
+    return address
+}
