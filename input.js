@@ -7,6 +7,19 @@ function initInputBox() {
     box.appendChild(nameInput)
 
     document.body.appendChild(box)
+
+    // create event to close inputBox
+    document.addEventListener('click', (e) => {
+        const target = e.target
+        const id = target.id
+
+        if (id !== 'ollama-input' && !box.contains(target)) {
+            box.style['display'] = 'none'
+
+            document.getElementById('ollama-name-prompt').value = ''
+            document.getElementById('ollama-custom-prompt').value = ''
+        }
+    })
 }
 
 function initBox() {
@@ -14,11 +27,11 @@ function initBox() {
     dom.id = 'ollama-input'
     fillStyle(dom, {
         'padding': '10px',
-        'backgroundColor': 'black',
+        'backgroundColor': '#222831',
         'fontSize': '18px',
-        'color': 'white',
+        'color': '#EEEEEE',
         'width': '300px',
-        'display': 'block',
+        'display': 'none',
         'position': 'fixed',
         'top': '0px',
         'left': '0px',
@@ -45,6 +58,13 @@ function initButtons() {
     runButton.id = 'ollama-run-input'
     runButton.textContent = 'run'
 
+    const buttonStyle = {
+        backgroundColor: '#76ABAE'
+    }
+
+    fillStyle(saveButton, buttonStyle)
+    fillStyle(runButton, buttonStyle)
+
     buttonsBox.appendChild(saveButton)
     buttonsBox.appendChild(runButton)
 
@@ -62,7 +82,8 @@ function initNameInput() {
         'display': 'block',
         'width': '100%',
         'margin-bottom': '6px',
-        'border-radius': '5px'
+        'border-radius': '5px',
+        'color': '#222831'
     })
     input.id = 'ollama-name-prompt'
     box.appendChild(input)
@@ -80,7 +101,8 @@ function initPromptArea() {
     fillStyle(textarea, {
         'display': 'block',
         'width': '100%',
-        'border-radius': '5px'
+        'border-radius': '5px',
+        'color': '#222831'
     })
     return textarea
 }

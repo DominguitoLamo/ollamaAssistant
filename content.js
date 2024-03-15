@@ -55,11 +55,21 @@ document.addEventListener('mousedown', e => {
 
 // resp from background
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  console.log("Received message from background script: ", message)
   if (message.type === "ollama-call") {
-    console.log("Received message from background script: ", message)
     // Handle the message from ollama
     if (message.content.data) {
 
     }
+  } else if (message.type === 'custom-prompt-open') {
+      // get selected position
+      const rangeBounds = window
+      .getSelection()
+      .getRangeAt(0)
+      .getBoundingClientRect()
+      const input = document.getElementById('ollama-input')
+      input.style.display = 'block'
+      input.style.left = `${ rangeBounds.left }px`
+      input.style.top = `${ rangeBounds.top + 40 }px`
   }
 })

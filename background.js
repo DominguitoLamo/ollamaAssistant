@@ -54,11 +54,15 @@ chrome.contextMenus.onClicked.addListener(async(info) => {
     const modelName = await getModelName()
     console.log('model name:', modelName)
     console.log("id: ", info.menuItemId)
-    console.log("highlightText: ", highLightText)
+    console.log("highlightInfo: ", highLightInfo)
     if (info.menuItemId !== 'custom prompt') {
-        const result = await requestLLM(modelName, `${highLightText}\n${customPrompts[info.menuItemId]}`)
+        const result = await requestLLM(modelName, `${highLightInfo.text}\n${customPrompts[info.menuItemId]}`)
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, { type: 'ollama-call', content: result })
+        })
+    } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, { type: 'custom-prompt-open' })
         })
     }
 })
